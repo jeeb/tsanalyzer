@@ -1,9 +1,6 @@
 CC = gcc
-CFLAGS = -Wall -g
+CFLAGS = -Wall -g -DDEBUG
 LDFLAGS = 
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $<
-
-clean:
-	rm -fv *.o
