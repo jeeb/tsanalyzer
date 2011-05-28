@@ -1,4 +1,4 @@
-include ./Makefile.global
+include ../Makefile.global
 
 DIRS = tsdumper
 
