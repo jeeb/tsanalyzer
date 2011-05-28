@@ -1,6 +1,6 @@
 include ./Makefile.global
 
-DIRS = ts
+DIRS = ts tools
 OBJ = main.o tsutils.o bitutils.o
 LINKOBJ = ts/adaption_field.o ts/MPEG_transport_stream.o ts/program_association_section.o ts/transport_packet.o $(OBJ)
 
