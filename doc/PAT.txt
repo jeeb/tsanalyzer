@@ -1,0 +1,36 @@
+DEFINITION:
+
+a = tid (table_id)
+b = ssi (section_syntax_indicator)
+c = '0' 
+[d = reserved1]
+e = sl (section_length)
+f = tsid (transport_stream_id)
+[g = reserved2]
+h = vn (version_number)
+i = cni (current_next_indicator)
+j = sn (section_number)
+k = lsn (last_section_number)
+l = pn (program_number)
+[m = reserved3]
+n = npid OR pmpid (network_PID OR program_map_PID);
+o = crc32 (CRC 32)
+
+STRUCTURE:
+AAAAAAAA
+BCDDEEEE
+EEEEEEEE
+FFFFFFFF
+FFFFFFFF
+GGHHHHHI
+JJJJJJJJ
+KKKKKKKK
+for cnt = 0; cnt < val(e)/4 - 9; cnt++
+  LLLLLLLL
+  LLLLLLLL
+  MMMNNNNN
+  NNNNNNNN
+OOOOOOOO
+OOOOOOOO
+OOOOOOOO
+OOOOOOOO
