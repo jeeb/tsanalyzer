@@ -1,0 +1,9 @@
+CC = gcc
+CFLAGS = -Wall -g
+LDFLAGS = 
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $<
+
+clean:
+	rm -fv *.o

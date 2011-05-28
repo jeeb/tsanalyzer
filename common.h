@@ -5,4 +5,7 @@
 	#include <string.h>
 	#include <stdint.h>
 	#include "tscommon.h"
+	#include "ts.h"
+	#include "bitutils.h"
+	#include "tsutils.h"
 #endif
