@@ -2,7 +2,7 @@ include ./Makefile.global
 
 DIRS = ts tools
 OBJ = main.o tsutils.o bitutils.o
-LINKOBJ = ts/adaption_field.o ts/MPEG_transport_stream.o ts/program_association_section.o ts/transport_packet.o $(OBJ)
+LINKOBJ = ts/adaption_field.o ts/MPEG_transport_stream.o ts/program_association_section.o ts/transport_packet.o ts/PES_packet.o ts/CA_section.o ts/CA_descriptor.o $(OBJ)
 
 all: $(OBJ) compile
 	$(CC) $(CFLAGS) -o tsanalyzer $(LINKOBJ) $(LDFLAGS)
