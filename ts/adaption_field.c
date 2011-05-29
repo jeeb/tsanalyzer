@@ -1,1 +1,1 @@
-#include "../common.h"uint8_t adaptation_field(char* data){	/* NOT IMPLEMENTED YET. */	printf("(AF) returning %u.\n",data[4]);	return data[4];}
+#include "../common.h"uint8_t adaptation_field(char* data,uint8_t pos){	/* NOT IMPLEMENTED YET. */	printf("(AF) returning %u.\n",data[pos]);	return pos + data[pos];}
