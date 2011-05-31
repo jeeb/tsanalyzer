@@ -10,4 +10,5 @@ uint8_t CA_section(char* data, uint8_t pos);
 uint8_t CA_descriptor(char* data, uint8_t pos);
 uint8_t TS_program_map_section(char* data, uint8_t pos);
 uint8_t descriptor(char* data, uint8_t datapos);
+uint8_t PES_packet(char* data, uint8_t pos);
 #endif

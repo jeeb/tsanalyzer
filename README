@@ -1,3 +1,11 @@
-TS Analyzer
+TSAnalyzer (work in progress)
 
-Work is still in progress.
+containing tools/tsdumper, small tool to dump certain PIDs bitwise to see contents.
+
+Works:
+-- read PAT
+-- read PMT from packets with payload_unit_start_indicator set to 1
+
+What doesn't work:
+* everything
+

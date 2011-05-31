@@ -1,5 +1,4 @@
 #include "../common.h"
-
 uint8_t descriptor(char* data, uint8_t datapos){
 	uint8_t DT = data[datapos];
 	uint8_t DL = data[datapos+1];

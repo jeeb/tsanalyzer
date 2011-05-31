@@ -1,5 +1,4 @@
 #include "../common.h"
-
 uint8_t TS_program_map_section(char* data, uint8_t pos){
 	// 0: AAAAAAAA
 	// 1: B0CCDDDD
@@ -35,7 +34,6 @@ uint8_t TS_program_map_section(char* data, uint8_t pos){
 	
 	printf("(TS-PMT): TID: 0x%x | SSI: 0x%x | (reserved1: 0x%x) | SL: %u/0x%x | PN: %u/0x%x | (reserved2: 0x%x) | VN: 0x%x | CNI: 0x%x | SN: 0x%x | LSN: 0x%x | (reserved3: 0x%x) | PCRPID: 0x%x | (reserved4: 0x%x) | PIL: %u/0x%x\n",
 	TID,SSI,reserved1,SL,SL,PN,PN,reserved2,VN,CNI,SN,LSN,reserved3,PCRPID,reserved4,PIL,PIL);
-
 	if (SL >= 0x3fd){
 		printf("(PMT) conflict with specification!! [SL must be < 0x3fd]\n");
 		return 184;

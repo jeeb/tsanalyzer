@@ -7,8 +7,9 @@ uint8_t CA_descriptor(char* data, uint8_t pos){
 	// CCCCCCCC
 	// DDDEEEEE
 	// EEEEEEEE
+	
 	uint8_t DL = data[pos+1];
-	uint16_t CASID = (data[pos+2]<<8)|(data[pos+3]&&0xff);
+	uint16_t CASID = (data[pos+2]<<8)|(data[pos+3]&0xff);
 	uint8_t reserved1 = (data[pos+4]&0xE0)>>5;
 	uint16_t CAPID = (data[pos+4]&0x1f)<<8|(data[pos+5]&0xff);
 	uint8_t i;
