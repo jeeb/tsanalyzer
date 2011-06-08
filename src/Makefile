@@ -11,7 +11,7 @@ compile:
 	for i in $(DIRS); do make -C $$i; done
 
 clean: clean-all
-	rm *.o tsanalyzer & true
+	rm *.o tsanalyzer || true
 	
 clean-all:
 	for i in $(DIRS); do make -C $$i clean; done

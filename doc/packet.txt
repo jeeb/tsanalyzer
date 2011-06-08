@@ -1,0 +1,4 @@
+	// Byte 1: 8 bit SYNC BYTE
+	// Byte 2: 1 bit TEI, 1 bit TP, 1 bit PUSI, 5 bit PID
+	// Byte 3: 8 bit PID
+	// Byte 4: 2 bit TSC, 2 bit AFC, 4 bit CC

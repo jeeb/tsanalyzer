@@ -1,17 +1,10 @@
 #include "../common.h"
-uint8_t program_association_section(char* data, uint8_t pos){
-	//GLOBDEC
+uint8_t program_association_section(char* data, uint8_t pos, struct transport_stream *ts){
+	// global declarations
 	uint16_t i;
+	uint16_t SLcounter; //Section Length Counter
 	
-	#ifdef DEBUG
-		for (i = 0; i < 8; i++){
-			printf("%d: ",i);
-			bitout_ui8(data[pos+i]);
-			printf("\n");
-		}
-	#endif
-	uint16_t SLcounter;
-	
+	// items
 	uint8_t TID = data[pos];
 	uint8_t SSI = data[pos+1] & 0x80 >> 7;
 	uint8_t reserved1 = data[pos+1] & 0x30 >> 4;
@@ -24,12 +17,26 @@ uint8_t program_association_section(char* data, uint8_t pos){
 	uint8_t LSN = data[pos+7];
 	
 	pos = pos + 8;
+
+	if (ts->serial_number_set && ts->serial_number == SN){
+		printf("(PAT) PAT table already exists, overriding would be stupid.\n");
+		return pos + SL;
+	}
 	
-	printf("(PAT) TID: 0x%x | SSI: 0x%x | (reserved1: 0x%x) | SL: 0x%x | TSID: 0x%x | (reserved2: 0x%x) | VN: 0x%x | CNI: 0x%x | SN: 0x%x | LSN: 0x%x\n",TID,SSI,reserved1,SL,TSID,reserved2,VN,CNI,SN,LSN);
+	ts->network_pid_set = 0;
+	ts->programs = NULL;
+	ts->serial_number = SN;
+	ts->serial_number_set = 1;
+	
+	#ifdef VERBOSE
+		printf("(PAT) TID: 0x%x | SSI: 0x%x | (reserved1: 0x%x) | SL: 0x%x | TSID: 0x%x | (reserved2: 0x%x) | VN: 0x%x | CNI: 0x%x | SN: 0x%x | LSN: 0x%x\n",TID,SSI,reserved1,SL,TSID,reserved2,VN,CNI,SN,LSN);
+	#endif
+	
 	if (TID == 0xFF){
-		printf("(PAT) forbidden table_id!\n");
+		printf("(PAT) forbidden table_id! (0xff)\n");
 		return 184;
 	}
+	
 	if ((SL & 0xC00) >> 10 != 0){
 		printf("(PAT) conflict with specification!! [first 2 bits in SL must be '0']");
 		#ifdef DEBUG
@@ -55,8 +62,13 @@ uint8_t program_association_section(char* data, uint8_t pos){
 		
 		if (PN == 0){
 			NPID = ((data[pos+2] & 0x1F) << 8) | (data[pos+3] & 0xff);
+			
+			ts->network_pid = NPID;
+			ts->network_pid_set = 1;
 		} else {
 			PMPID = ((data[pos+2] & 0x1F) << 8) | (data[pos+3] & 0xff);
+			
+			add_program_to_ts(PN,PMPID,ts);
 		}
 		
 		#ifdef DEBUG
@@ -64,9 +76,9 @@ uint8_t program_association_section(char* data, uint8_t pos){
 			for (j = 0; i < 4; i++) {
 				printf("%d: ",j); bitout_ui8(data[pos+j]);printf("\n");
 			}
-				
 			bitout_ui16(PN);printf("\n");
 		#endif
+
 		pos = pos+4;
 	
 		#ifdef VERBOSE
@@ -79,11 +91,23 @@ uint8_t program_association_section(char* data, uint8_t pos){
 		#endif
 	}
 	SLcounter = i;
-	printf("SLcounter: %u\n",SLcounter);
+	
+	#ifdef DEBUG
+		printf("SLcounter: %u\n",SLcounter);
+	#endif
+	
 	uint32_t crc32 = ((data[pos+0] & 0xFF000000) << 24) | ((data[pos+1] & 0xFF0000) << 16) | ((data[pos+2] & 0xFF00) << 8) | (data[pos+3] & 0xFF) ;
-	printf("(PAT) CRC32: %u/%x %x %x %x\n",crc32,(data[pos+0]) , (data[pos+1]) , (data[pos+2]) , (data[pos+3]));
+	
+	#ifdef VERBOSE
+		printf("(PAT) CRC32: %u/%x %x %x %x\n",crc32,(data[pos+0]) , (data[pos+1]) , (data[pos+2]) , (data[pos+3]));
+	#endif
+	
 	pos = pos+4; 
-	SLcounter = SLcounter - 4;
-	printf("SLcounter: %u\n",SLcounter);
+
+	#ifdef DEBUG
+		SLcounter = SLcounter - 4;
+		printf("SLcounter: %u\n",SLcounter);
+	#endif
+	
 	return pos;
 }

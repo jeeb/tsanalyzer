@@ -5,4 +5,4 @@ OBJ = adaption_field.o MPEG_transport_stream.o program_association_section.o tra
 all: $(OBJ)
 
 clean:
-	rm *.o & true
+	rm *.o || true

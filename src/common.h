@@ -4,6 +4,7 @@
 	#include <stdlib.h>
 	#include <string.h>
 	#include <stdint.h>
+	#include "classes.h"
 	#include "tscommon.h"
 	#include "ts.h"
 	#include "bitutils.h"

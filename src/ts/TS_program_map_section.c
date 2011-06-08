@@ -1,5 +1,5 @@
 #include "../common.h"
-uint8_t TS_program_map_section(char* data, uint8_t pos){
+uint8_t TS_program_map_section(char* data, uint8_t pos, struct transport_stream *ts){
 	// 0: AAAAAAAA
 	// 1: B0CCDDDD
 	// 2: DDDDDDDD
@@ -40,16 +40,15 @@ uint8_t TS_program_map_section(char* data, uint8_t pos){
 	}
 	
 	if (SL <= PIL){
-		printf("(CAT) PIL > SL. Sense?\n");
+		printf("(CAT) PIL > SL. How does that work?\n");
 		return 184;
 	}
 	
 	i = PIL;
 	while (i > 0){
 		uint8_t oldpos = pos;
-		printf(" ");
+		printf(">");
 		pos = descriptor(data,pos);
-		//printf("i: %d oldpos: %d pos: %d (pos-oldpos): %d ",i, oldpos, pos, pos-oldpos);
 		i = i - (pos - oldpos);
 	}	
 	
@@ -65,7 +64,7 @@ uint8_t TS_program_map_section(char* data, uint8_t pos){
 		j = ESIL;
 		while (j > 0){
 			uint8_t oldpos = pos;
-			printf("  ");
+			printf(" >");
 			pos = descriptor(data,pos);
 			//printf("i: %d oldpos: %d pos: %d (pos-oldpos): %d ",i, oldpos, pos, pos-oldpos);
 			j = j - (pos - oldpos);

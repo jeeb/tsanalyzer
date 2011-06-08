@@ -6,4 +6,4 @@ all: $(OBJ)
 	$(CC) $(CFLAGS) -o tsdumper $(OBJ)
 
 clean:
-	rm *.o tsdumper & true
+	rm *.o tsdumper || true
