@@ -1,6 +1,6 @@
 include ../Makefile.global
 
-DIRS = tsdumper
+DIRS = tsbitdumper
 
 all: compile
 
