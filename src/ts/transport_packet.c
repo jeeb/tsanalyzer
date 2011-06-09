@@ -88,12 +88,26 @@ void transport_packet(char* data, struct transport_stream *ts){
 					printf("datapos @ %d\n",datapos);
 				#endif
 			
-			} /*else if (PID == 0x101 && data[datapos] == 0 && data[datapos+1] == 1){
-					printf("PES detected.\n");
-					datapos = PES_packet(data,datapos-1);
-			} */ else {
-				printf("@PID %u - not implemented yet...\n",PID);
-				datapos = 184;
+			} else {
+				datapos--;
+				if ((((data[datapos] & 0xFF0000) << 16) | ((data[datapos+1] & 0xFF00) << 8) | (data[datapos+2] & 0xFF)) == 0x000001) {
+					printf("PES found.\n");
+					
+					datapos = PES_packet(data,datapos);
+					
+					printf("PES over.\n");
+				} else {
+					printf("debug: PES? ");
+					bitout_ui8(data[datapos]);
+					printf(" ");
+					bitout_ui8(data[datapos+1]);
+					printf(" ");
+					bitout_ui8(data[datapos+2]);
+					printf(" ");				
+					bitout_ui32((((data[datapos] & 0xFF0000) << 16) | ((data[datapos+1] & 0xFF00) << 8) | (data[datapos+2] & 0xFF)));
+					printf(" - @PID %u - not implemented yet...\n",PID);
+					datapos = 184;
+				}
 			}
 			fflush(stdout);
 		}
