@@ -76,7 +76,10 @@ void transport_packet(char* data, struct transport_stream *ts){
 				#ifdef VERBOSE
 					printf("NAT detected.\n");
 				#endif
-				printf("Ignoring network informations. They are network specific.\n"); 
+				
+				#ifdef DEBUG
+					printf("Ignoring network informations. They are network specific.\n"); 
+				#endif
 			} else if (is_PID_PMT(PID,ts)) {
 				#ifdef VERBOSE
 					printf("PMT detected.\n");
@@ -91,21 +94,17 @@ void transport_packet(char* data, struct transport_stream *ts){
 			} else {
 				datapos--;
 				if ((((data[datapos] & 0xFF0000) << 16) | ((data[datapos+1] & 0xFF00) << 8) | (data[datapos+2] & 0xFF)) == 0x000001) {
-					printf("PES found.\n");
+					#ifdef VERBOSE
+						printf("PES found.\n");
+					#endif
 					
 					datapos = PES_packet(data,datapos);
 					
-					printf("PES over.\n");
+					#ifdef VERBOSE
+						printf("PES over.\n");
+					#endif
 				} else {
-					printf("debug: PES? ");
-					bitout_ui8(data[datapos]);
-					printf(" ");
-					bitout_ui8(data[datapos+1]);
-					printf(" ");
-					bitout_ui8(data[datapos+2]);
-					printf(" ");				
-					bitout_ui32((((data[datapos] & 0xFF0000) << 16) | ((data[datapos+1] & 0xFF00) << 8) | (data[datapos+2] & 0xFF)));
-					printf(" - @PID %u - not implemented yet...\n",PID);
+					printf("@PID %u - not implemented yet...\n",PID);
 					datapos = 184;
 				}
 			}
