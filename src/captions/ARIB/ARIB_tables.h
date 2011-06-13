@@ -1,0 +1,16 @@
+char[][4] katakana_graphical_set = {
+0x21 = "ァ",
+0x22 = "ア",
+0x23 = "ィ",
+0x24 = "イ",
+0x41 = "チ",
+0x49 = "ド",
+0x60 = "ム",
+0x63 = "ャ",
+0x7D = "．"
+};
+
+char[] alphanumeric_char_set = {
+0x28 = "(",
+0x29 = ")"
+}

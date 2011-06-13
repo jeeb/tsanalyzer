@@ -1,8 +1,12 @@
 #include "../common.h"
 
 #define C1_CSI 0x9B
+#define C0_ESC 0x1B
+#define C0_LS1 0x0E
+#define C0_LS0 0x0F
 #define ARIB_PLD 0x5B
 #define ARIB_PLU 0x5C
+#define C1_NSZ 0x8A // Normal Size 
 
 int ARIB_parse_caption_payload(char* data, uint8_t pos, uint8_t length){
 	char *text = malloc(sizeof(char)*(length+1));
@@ -25,16 +29,24 @@ int ARIB_parse_caption_payload(char* data, uint8_t pos, uint8_t length){
 					if (I1 == 0x20){
 						if (data[pos+i] == 0x53){
 							printf("found SWF. type = 0x%X\n",P1);
+							i++;
 						} else if (data[pos+i] == 0x54){
 							printf("found CCC. type = 0x%X\n",P1);
+							i++;
 						} else if (data[pos+i] == 0x6E){
 							printf("found RCS. type = 0x%X\n",P1);
+							i++;
 						}
 					}
 				}
 			} else {
 				printf("unknown control sequence\n");
 			}
+		} else if (data[pos+i] == C0_ESC){
+			printf("ESC sequence.\n");
+			i++;
+			i++;
+			i++;
 		}
 	}
 }
