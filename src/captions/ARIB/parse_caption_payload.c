@@ -1,4 +1,4 @@
-#include "../common.h"
+#include "../../common.h"
 
 #define C1_CSI 0x9B
 #define C0_ESC 0x1B
@@ -47,6 +47,10 @@ int ARIB_parse_caption_payload(char* data, uint8_t pos, uint8_t length){
 			i++;
 			i++;
 			i++;
+		} else {
+			printf("%c",data[pos+i]);
+			i++;
 		}
 	}
+	return pos+i;
 }

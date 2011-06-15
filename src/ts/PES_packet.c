@@ -20,7 +20,6 @@
 #define PES_STREAMID_reserved_data_stream 		0xFE
 #define PES_STREAMID_program_stream_directory 	0xFF
 uint8_t PES_packet(char* data, uint8_t pos){
-	//uint32_t PSCF = ((data[pos+0] & 0xFF0000) << 16) | ((data[pos+1] & 0xFF00) << 8) | (data[pos+2] & 0xFF);
 	uint32_t PSCF = ((data[pos+0] << 16) & 0xFF0000) | ((data[pos+1]  << 8)& 0xFF00) | (data[pos+2] & 0xFF);
 	if (PSCF != 0x000001){
 		#ifdef DEBUG
@@ -170,7 +169,11 @@ uint8_t PES_packet(char* data, uint8_t pos){
 		}
 		#ifdef DEBUG
 			printf("pos: %d PESHDL %d PPL: %d\n",pos,PESHDL,PPL);
-			for (i = 0; PESHDL>0; i++) {pos++; PPL--; PESHDL--; bitout_ui8(data[pos-1]);}printf("\n"); 
+		#endif
+		
+		for (i = 0; PESHDL>0; i++) {pos++; PPL--; PESHDL--; }
+		
+		#ifdef DEBUG
 			printf("pos: %d PESHDL %d PPL: %d\n",pos,PESHDL,PPL);
 		#endif
 

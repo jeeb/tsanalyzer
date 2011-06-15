@@ -1,6 +1,6 @@
 include ../Makefile.global
 
-DIRS = tsbitdumper
+DIRS = tsbitdumper captiondumper captionparser
 
 all: compile
 

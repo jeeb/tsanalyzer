@@ -13,7 +13,6 @@ uint8_t ARIB_data_group(char* data, uint8_t pos, uint8_t length){
 	length = length - 5;
 	
 	printf("(ARIB-DG): DGID: 0x%X | DGV: 0x%X | DGLN: 0x%X | LDGLN: 0x%X | DGS: 0x%X/%d\n",data_group_id,data_group_version,data_group_link_number,last_data_group_link_number,data_group_size,data_group_size);
-	//if ((orig_PPL != 0 && data_group_size > PPL) ||(orig_PPL == 0 && data_group_size > 256)){
 	if ( (data_group_id > 0x08  && data_group_id < 0x20) || (data_group_id > 0x28) ){
 		printf("invalid data_group_id 0x%2X\n",data_group_id);
 		return pos;
