@@ -6,10 +6,48 @@
 #include <math.h>
 #include <iconv.h>
 #include "../../src/captions/ARIB/ARIB_tables.h"
+#include "x0215_table.h"
 
+#define ARIB_USE_HIRAGANA_TABLE 0x30
 #define ARIB_USE_KATAKANA_TABLE 0x31
 #define ARIB_USE_ALPHANUMERIC_TABLE 0x4A
 
+int char2hex(char in){
+	switch(in){
+		case '0':
+			return 0;
+		case '1':
+			return 1;
+		case '2':
+			return 2;
+		case '3':
+			return 3;
+		case '4':
+			return 4;
+		case '5':
+			return 5;
+		case '6':
+			return 6;
+		case '7':
+			return 7;
+		case '8':
+			return 8;
+		case '9':
+			return 9;
+		case 'A':
+			return 10;
+		case 'B':
+			return 11;
+		case 'C':
+			return 12;
+		case 'D':
+			return 13;
+		case 'E':
+			return 14;
+		case 'F':
+			return 15;
+	}
+}
 
 char *convertX0213toUTF8(char *toConvert){
 	char ob[30];
@@ -80,6 +118,10 @@ int main(int argc, char** argv){
 	//uint8_t arr[81] = {0x9B, 0x37, 0x20, 0x53, 0x9B, 0x31, 0x37, 0x30, 0x3B, 0x33, 0x30, 0x20, 0x5F, 0x9B, 0x36, 0x32, 0x30, 0x3B, 0x34, 0x38, 0x30, 0x20, 0x56, 0x1D, 0x61, 0x9B, 0x33, 0x36, 0x3B, 0x33, 0x36, 0x20, 0x57, 0x9B, 0x34, 0x20, 0x58, 0x9B, 0x32, 0x34, 0x20, 0x59, 0x89, 0x87, 0x90, 0x20, 0x44, 0x90, 0x51, 0x9B, 0x33, 0x33, 0x30, 0x3B, 0x35, 0x30, 0x39, 0x20, 0x61, 0x1B, 0x29, 0x4A, 0x0E, 0x28, 0x8A, 0x1B, 0x29, 0x31, 0x0E, 0x49, 0x22, 0x41, 0x63, 0x24, 0x60, 0x89, 0x1B, 0x29, 0x4A, 0x0E, 0x29};
 	uint8_t *arr = NULL;
 	int arrlen = 0;
+	uint8_t g3charset = 0;
+	uint8_t g1charset = ARIB_USE_ALPHANUMERIC_TABLE;
+	uint8_t g0charset = 0;
+	uint8_t ls3active = 0;
 	
 	if (argc < 2){
 		printf("usage: %s \"HEX-STRING\"\n",argv[0]);
@@ -225,15 +267,30 @@ int main(int argc, char** argv){
 		} else if (arr[pos] == 0x0F){
 			printf("LS0");
 			pos++;
+			current_table = g0charset;
+			printf("\n"); 
+		} else if (arr[pos] == 0x0E){
+			printf("LS1");
+			pos++;
+			current_table = g1charset;
+			printf("\n"); 
+		} else if (arr[pos] == 0x00){
+			printf("NUL");
+			pos++;
 			printf("\n"); 
 		} else if (arr[pos] == 0x1D){
 			printf("SS3");
 			pos++;
-			printf(" - G3 lock @ 0x%X",arr[pos]);
+			printf(" - single shift G3 @ 0x%X",arr[pos]);
+			g3charset = arr[pos]-0x31;
 			pos++;
 			printf("\n"); 
 		} else if (arr[pos] == 0x89){
 			printf("MSZ");
+			pos++;
+			printf("\n");
+		} else if (arr[pos] == 0x88){
+			printf("SSZ");
 			pos++;
 			printf("\n");
 		} else if (arr[pos] == 0x8A){
@@ -242,6 +299,10 @@ int main(int argc, char** argv){
 			printf("\n");
 		} else if (arr[pos] == 0x87){
 			printf("WHF");
+			pos++;
+			printf("\n");
+		} else if (arr[pos] == 0x86){
+			printf("CNF");
 			pos++;
 			printf("\n");
 		} else if (arr[pos] == 0x90){
@@ -282,7 +343,8 @@ int main(int argc, char** argv){
 				pos++;
 			} else if (arr[pos] == 0x6E){
 				printf(" | LS3");
-				pos++;
+				current_table = g3charset;
+				//pos++;
 			} else {
 				printf(" %X",arr[pos]);
 				pos++;
@@ -296,15 +358,29 @@ int main(int argc, char** argv){
 		} else {
 			if (current_table != 0){
 				if (current_table == ARIB_USE_KATAKANA_TABLE){
-					printf("%s",katakana_graphical_set[arr[pos]]);
-					textout = append_text_string(textout,katakana_graphical_set[arr[pos]]);
+					uint32_t arrelm = 0x2500 | arr[pos];
+					printf("=%X=",arrelm);
+					printf("%s",x0215_mapping[arrelm]);
+					textout = append_text_string(textout,x0215_mapping[arrelm]);
 				}
 				else if (current_table == ARIB_USE_ALPHANUMERIC_TABLE){
 					printf("%c",alphanumeric_graphical_set[arr[pos]]);
 					textout = append_text_char(textout,alphanumeric_graphical_set[arr[pos]]);
 				}
+				else if (current_table == ARIB_USE_HIRAGANA_TABLE){
+					uint32_t arrelm = 0x2400 | arr[pos];
+					printf("=%X=",arrelm);
+					printf("%s",x0215_mapping[arrelm]);
+					textout = append_text_string(textout,x0215_mapping[arrelm]);
+				}
+			} else {
+				uint32_t arrelm = ((arr[pos] << 8) & 0xFF00) | arr[pos+1];
+				printf("=%X=",arrelm);
+				printf("%s",x0215_mapping[arrelm]);
+				textout = append_text_string(textout,x0215_mapping[arrelm]);
+				pos++;
 			}
-			printf("no table set yet. (0x%02X)\n",arr[pos]);				
+			//printf("no table set yet. (0x%02X)\n",arr[pos]);				
 			/*if (arr[pos+1] != 0x1B){
 				char *buf = malloc(3*sizeof(char));
 				strncpy(buf,&(arr[pos]),2);
