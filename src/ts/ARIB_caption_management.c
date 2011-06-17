@@ -3,6 +3,7 @@
 uint8_t ARIB_caption_management(char* data, uint8_t pos){
 	uint8_t TMD = (data[pos] & 0xC0) >> 6;
 	uint8_t reserved1 = data[pos] & 0x3F;
+	uint8_t i;
 	pos++;
 	
 	printf("(ARIB-CM): TMD: %X | reserved1: %X | ",TMD,reserved1);

@@ -4,7 +4,6 @@ uint8_t ARIB_data_unit(char* data, uint8_t pos, uint32_t dull){
 	uint8_t unit_seperator = data[pos];
 	uint8_t data_unit_parameter = data[pos+1];
 	uint32_t data_unit_size = (((data[pos+2] & 0x0000FF) << 16) | ((data[pos+3] & 0x00FF) << 8) | ((data[pos+4] & 0xFF) << 0));
-	uint32_t i;
 	
 	pos = pos + 5;
 	
@@ -20,6 +19,7 @@ uint8_t ARIB_data_unit(char* data, uint8_t pos, uint32_t dull){
 	}
 	
 	#ifdef DEBUG
+		uint32_t i;
 		printf(">ARIB-DU: data: ");
 		char *out_text = malloc(sizeof(char)*(data_unit_size+1));
 		memset(out_text,0,(data_unit_size+1));

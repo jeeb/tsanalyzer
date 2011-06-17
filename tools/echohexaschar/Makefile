@@ -1,10 +1,10 @@
 include ../../Makefile.global
 
-APPNAME = captiondumper
+APPNAME = echohexaschar
 OBJ = main.o
 
 all: clean $(OBJ)
-	$(CC) $(CFLAGS) -o $(APPNAME) $(OBJ) -lm
+	$(CC) $(CFLAGS) -o $(APPNAME) $(OBJ) 
 
 clean:
 	rm *.o $(APPNAME) || true
